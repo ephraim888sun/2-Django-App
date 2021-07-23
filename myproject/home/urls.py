@@ -4,5 +4,6 @@ from . import views #import the current direct views(home/views.py)
 urlpatterns = [
     path('', views.home, name='home'),
     path('contact/', views.contact, name='contact'),
-    path('about/', views.about, name='about')
+    path('about/', views.about, name='about'),
+    path('portfolio/', views.portfolio, name='portfolio')
 ]
