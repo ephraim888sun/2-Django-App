@@ -1,83 +1,151 @@
 {% extends "home/base.html" %}
 {% block content %}
+
 <style>
-.card{
-    box-shadow: 0 16px 48px #E3E7EB;
-    margin-right: 4em;
+    body {
+  font-family: Arial;
+  background: #B3C0A4 ;
 }
+
+/* Header/Blog Title */
 .header {
   padding: 30px;
   text-align: center;
-  background: #ff5757;
+  background: #505168;
   color: white;
   font-size: 30px;
 }
-.container-fluid {
-    padding: 30px;
+/* Create two unequal columns that floats next to each other */
+/* Left column */
+.leftcolumn {
+  float: left;
+  width: 75%;
 }
 
+/* Right column */
+.rightcolumn {
+  float: left;
+  width: 25%;
+  padding-left: 20px;
+}
+
+/* Fake image */
+.fakeimg {
+  background-color: #aaa;
+  width: 100%;
+  padding: 20px;
+}
+
+/* Add a card effect for articles */
+.card {
+  background-color: white;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 16px 48px #E3E7EB;
+
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Footer */
+.footer {
+  padding: 20px;
+  text-align: center;
+  background: #ddd;
+  margin-top: 20px;
+}
+#boxshadow
+{
+border: 3px #fffbee;
+box-shadow: 5px 6px #50514F;
+border-radius: 5mm;
+}
+
+/* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 800px) {
+  .leftcolumn, .rightcolumn {
+    width: 100%;
+    padding: 0;
+  }
+}
 </style>
+
+<script>
+  function resizeIframe(obj) {
+    obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+  }
+</script>
 
 <div class="header" style="padding: 50px;">
   <h1>Post</h1>
 </div>
 
-<!-- Sidebar Widgets Column -->
-<div class="col-md-4 float-right ">
-<div class="card my-4">
-        <h5 class="card-header">About FM INVEST</h5>
-    <div class="card-body">
-        <p class="card-text"> This awesome blog is made on the top of our Favourite full stack Framework 'Django', follow up the tutorial to learn how we made it..!</p>
-        <a href= "{% url 'about' %}"
-           class="btn btn-danger">Know more!</a>
-    </div>
-</div>
-</div>
-
-<div class="container-fluid" style="margin-left: 4em; ">
-    <div class="row" >
-        <!-- Blog Entries Column -->
-        <div class="col-md-8 mt-3 left" >
-            {% for post in post_list %}
-            <div class="card mb-4" >
-                <div class="card-body" style="height: 500px;">
-                    <h2 class="card-title" >
-                        <a href="{% url 'post_detail' post.pk %}">
-                            {{ post.title }}
-
-                        </a>
-                    </h2>
-                    <p class="card-text text-muted h6">{{ post.author }} | {{ post.created_on}} </p>
-                    <p class="card-text">{{post.content|slice:":200" }}</p>
-                        <iframe id="ytplayer" type="text/html" width="640" height="360"
-                                src="https://www.youtube.com/embed/qEjtK6GviPo"
-                                frameborder="0"></iframe>
-                </div>
-            </div>
-            {% endfor %}
+<div class="row" style="padding-left: 50px; padding-right: 50px;" >
+  <div class="leftcolumn " style="padding-left: 50px; padding-right: 50px; " >
+    {% for post in post_list %}
+    <div class="card mb-4" id="boxshadow" >
+        <div class="card-body">
+            <h2 class="card-title" >
+                <a href="{% url 'post_detail' post.pk %}">
+                    {{ post.title }}
+                </a>
+            </h2>
+            <p class="card-text text-muted h6">{{ post.author }} | {{ post.created_on}} </p>
+            <p class="card-text">{{post.content|slice:":200" }}</p>
+            <p align="center" >
+                <iframe id="ytplayer" type="text/html" width="640" height="360"
+                    src="https://www.youtube.com/embed/qEjtK6GviPo"
+                    frameborder="0" onload="resizeIframe(this)"></iframe>
+            </p>
         </div>
     </div>
-    {% if is_paginated %}
+    {% endfor %}
+  </div>
 
-        {% if page_obj.has_previous %}
-            <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
-            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+  <div class="rightcolumn">
+    <div class="card" id="boxshadow">
+      <h2>About Me</h2>
+      <div class="fakeimg" style="height:100px;">Image</div>
+      <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
+    </div>
+    <div class="card" id="boxshadow" >
+      <h3>Popular Post</h3>
+      <div class="fakeimg">Image</div><br>
+      <div class="fakeimg">Image</div><br>
+      <div class="fakeimg">Image</div>
+    </div>
+    <div class="card" id="boxshadow">
+      <h3>Follow Me</h3>
+      <p>Some text..</p>
+    </div>
+  </div>
+  {% if is_paginated %}
+
+    {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+             <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
         {% endif %}
+    {% endfor %}
 
-        {% for num in page_obj.paginator.page_range %}
-            {% if page_obj.number == num %}
-                 <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
-            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
-            {% endif %}
-        {% endfor %}
-
-        {% if page_obj.has_next %}
-            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
-            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-        {% endif %}
+    {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
 
     {% endif %}
+
 </div>
 
 
