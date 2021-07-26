@@ -1,4 +1,22 @@
 {% extends "home/base.html" %}
 {% block content %}
+<style>
+.header {
+  padding: 30px;
+  text-align: center;
+  background: #ff5757;
+  color: white;
+  font-size: 30px;
+}
+</style>
 
+<div class="header" style="padding: 50px;">
+  <h1>About</h1>
+</div>
+
+
+{% block footer%}
+  <a href="{% url 'about' %}" class="w3-button w3-light-grey"><i class="fa fa-arrow-up w3-margin-right"></i>To the top</a>
+{% endblock footer %}
 {% endblock %}
+

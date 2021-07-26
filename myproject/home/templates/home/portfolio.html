@@ -1,42 +1,88 @@
 {% extends "home/base.html" %}
 {% block content %}
 <style>
-    .card{
-        box-shadow: 0 16px 48px #E3E7EB;
-    }
+.card{
+    box-shadow: 0 16px 48px #E3E7EB;
+    margin-right: 4em;
+}
+.header {
+  padding: 30px;
+  text-align: center;
+  background: #ff5757;
+  color: white;
+  font-size: 30px;
+}
+.container-fluid {
+    padding: 30px;
+}
+
 </style>
+
+<div class="header" style="padding: 50px;">
+  <h1>Post</h1>
+</div>
 
 <!-- Sidebar Widgets Column -->
 <div class="col-md-4 float-right ">
 <div class="card my-4">
-        <h5 class="card-header">About Us</h5>
+        <h5 class="card-header">About FM INVEST</h5>
     <div class="card-body">
         <p class="card-text"> This awesome blog is made on the top of our Favourite full stack Framework 'Django', follow up the tutorial to learn how we made it..!</p>
-        <a href="https://djangocentral.com/building-a-blog-application-with-django"
+        <a href= "{% url 'about' %}"
            class="btn btn-danger">Know more!</a>
     </div>
 </div>
 </div>
 
-<div class="container">
-    <div class="row">
+<div class="container-fluid" style="margin-left: 4em; ">
+    <div class="row" >
         <!-- Blog Entries Column -->
-        <div class="col-md-8 mt-3 left">
+        <div class="col-md-8 mt-3 left" >
             {% for post in post_list %}
-            <div class="card mb-4">
-                <div class="card-body">
+            <div class="card mb-4" >
+                <div class="card-body" style="height: 500px;">
                     <h2 class="card-title" >
                         <a href="{% url 'post_detail' post.pk %}">
                             {{ post.title }}
+
                         </a>
                     </h2>
                     <p class="card-text text-muted h6">{{ post.author }} | {{ post.created_on}} </p>
                     <p class="card-text">{{post.content|slice:":200" }}</p>
-
+                        <iframe id="ytplayer" type="text/html" width="640" height="360"
+                                src="https://www.youtube.com/embed/qEjtK6GviPo"
+                                frameborder="0"></iframe>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
+    {% if is_paginated %}
+
+        {% if page_obj.has_previous %}
+            <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                 <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+
+    {% endif %}
 </div>
+
+
+{% block footer%}
+  <a href="{% url 'portfolio' %}" class="w3-button w3-light-grey"><i class="fa fa-arrow-up w3-margin-right"></i>To the top</a>
+{% endblock footer %}
+
 {%endblock%}

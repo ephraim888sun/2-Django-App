@@ -14,16 +14,27 @@ def about(request):
     return render(request, 'home/about.html')
 
 # def portfolio(request):
-#     return render(request, 'home/portfolio.html')
+#     context = {
+#         'post_list': Post.objects.all()
+#     }
+#     return render(request, 'home/portfolio.html', context)
+
+# class portfolio(generic.ListView):
+#
+#     model = Post
+#     template_name = 'home/portfolio.html'
 
 class portfolio(generic.ListView):
     model = Post
     template_name = 'home/portfolio.html'
+    paginate_by = 5
 
 # class PostList(generic.ListView):
-#     queryset = Post.objects.filter(status=1).order_by('-created_on')
-#     template_name = ''
-# #
+#     model = Post
+#     template_name = 'home/portfolio.html'
+#     paginate_by = 5
+#
 class PostDetail(generic.DetailView):
     model = Post
     template_name = 'home/post_detail.html'
+
